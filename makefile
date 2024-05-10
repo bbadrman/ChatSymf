@@ -1,5 +1,5 @@
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-.PHONY: phpcs build up stop destroy restart ps logs logs-web logs-db web db install symfony-me symfony-mc symfony-mm symfony-dmm symfony-dfl kill-all stop-all
+.PHONY: vendor/autoload.php phpcs build up stop destroy restart ps logs logs-web logs-db web db install symfony-me symfony-mc symfony-mm symfony-dmm symfony-dfl kill-all stop-all
 build:
 	docker-compose up -d --force-recreate --build
 up:
@@ -53,5 +53,15 @@ stup:
 klup:
 	@make kill-all
 	@make up
-phpcs:
+phpcs: vendor/autoload.php
 	vendor/bin/phpcs
+
+phpcbf: vendor/autoload.php
+	vendor/bin/phpcbf
+
+phpstan: vendor/autoload.php
+	vendor/bin/phpstan
+
+vendor/autoload.php: composer.lock
+	composer install
+	touch vendor/autoload.php
